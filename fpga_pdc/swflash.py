@@ -65,7 +65,10 @@ if __name__ == "__main__":
         os.system(cPath + "scp.py " + sys.argv[2] + " " + dfwPath)
 
     # try to flash the FW
-    os.system("which pdc_linux_console")
+    # os.system("which pdc_linux_console")
+    flList1 = ["which pdc_linux_console" + ffwPath, "/public/eda/software/pdc/1.0.0/bin/pdc_linux_console", 10]
+    rv1 = bOP(pcSSH, flList1)
+
     flList = ["pdc_linux_console -i " + ffwPath, "Flashing PASS", 120]
     # flList = ["pdc_linux_console", "Flashing PASS", 120]
     rv = bOP(pcSSH, flList)
