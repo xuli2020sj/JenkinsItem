@@ -65,7 +65,7 @@ if __name__ == "__main__":
         os.system(cPath + "scp.py " + sys.argv[2] + " " + dfwPath)
 
     # try to flash the FW
-    # flList = ["pdc_linux_console -i " + ffwPath, "Flashing PASS", 120]
-    flList = ["pdc_linux_console", "Flashing PASS", 120]
+    flList = ["pdc_linux_console -i " + ffwPath, "Flashing PASS", 120]
+    # flList = ["pdc_linux_console", "Flashing PASS", 120]
     rv = bOP(pcSSH, flList)
     sys.exit(rv)
