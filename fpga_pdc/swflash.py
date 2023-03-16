@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     # try to flash the FW
     # os.system("which pdc_linux_console")
-    flList1 = ["which pdc_linux_console" + ffwPath, "/public/eda/software/pdc/1.0.0/bin/pdc_linux_console", 10]
+    flList1 = ["which pdc_linux_console", "/public/eda/software/pdc/1.0.0/bin/pdc_linux_console", 10]
     rv1 = bOP(pcSSH, flList1)
 
     flList = ["pdc_linux_console -i " + ffwPath, "Flashing PASS", 120]
