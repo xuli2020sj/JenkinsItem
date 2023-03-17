@@ -10,7 +10,7 @@ pipeline{
                    }
 				}
             mail bcc: '', body: "Dear ${BUILD_USER},\n\n\tBuild Finished. Please check the result.", 
-            cc: ,
+
             from: 'devops@cixcomputing.com', replyTo: '', 
             subject: "Lab loader finished", 
             to: "${BUILD_USER_EMAIL}"
