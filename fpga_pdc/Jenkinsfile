@@ -1,5 +1,6 @@
 pipeline{
     agent { label 'verify' }
+    options { retry(3) }
     post {
         always{
                 wrap([$class: 'BuildUser']) {
