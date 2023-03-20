@@ -67,15 +67,7 @@ if __name__ == "__main__":
     # try to flash the FW
     # os.system("which pdc_linux_console")
 
-
-    tpc2 = tPC[0:4] + '-' + tPC[-1]
-    flList1 = ['/home/svc.fpgatest/workspace/xmplugin/xmClient.sh ' + tpc2 + ' close', "", 10]
-    rv1 = bOP(pcSSH, flList1)
-
     flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 120]
     rv = bOP(pcSSH, flList)
-
-    flList1 = ['/home/svc.fpgatest/workspace/xmplugin/xmClient.sh ' + tpc2 + ' open', "", 10]
-    rv2 = bOP(pcSSH, flList1)
 
     sys.exit(rv)
