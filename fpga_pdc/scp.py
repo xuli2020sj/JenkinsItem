@@ -2,7 +2,6 @@
 
 import pexpect
 import sys
-import time
 import os
 
 prt = "Password:"

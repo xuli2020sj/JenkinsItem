@@ -21,7 +21,6 @@ pcInfo = {
     "fpga04": {'name': 'svc.fpgatest', 'ip': 'fpga04.cixcomputing.cn', 'passwd': 'Cix@88008080'},
     "fpga05": {'name': 'svc.fpgatest', 'ip': 'fpga05.cixcomputing.cn', 'passwd': 'Cix@88008080'},
     "fpga06": {'name': 'svc.fpgatest', 'ip': 'fpga06.cixcomputing.cn', 'passwd': 'Cix@88008080'},
-
 }
 cPath = os.path.split(os.path.realpath(__file__))[0] + "/"
 
@@ -53,6 +52,7 @@ def bOP(ss, oplist):
 if __name__ == "__main__":
     # get target PC arg
     tPC = sys.argv[1].split('-')[0]
+    print(tPC)
     # default fw path in remote PC
     dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % (tPC)
     # temp path for uploader fw
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # try to flash the FW
     # os.system("which pdc_linux_console")
 
-    flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 120]
+    flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
     rv = bOP(pcSSH, flList)
 
     sys.exit(rv)
