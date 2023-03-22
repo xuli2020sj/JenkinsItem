@@ -9,11 +9,14 @@ arg1 - The fpga PC name like fpga01 or fpga01-sub1
 arg2 - The uploaded flash fw file. It is omissible when default fw is OK.
 arg3 - Whether to update the default fw using the uploaded FW.
 """
+import logging
+
 from pexpect import pxssh
 import pexpect
 import sys
 import os
 import argparse
+import clogging
 
 # global 
 pcInfo = {
@@ -72,6 +75,8 @@ if __name__ == "__main__":
     root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
     default_firmware_dir = root_dir + "/default_firmware"
     temp_firmware_dir = root_dir + "/temp_firmware"
+    logging.info(default_firmware_dir)
+    logging.info(temp_firmware_dir)
     if not os.path.exists(root_dir):
         os.makedirs(root_dir)
         os.makedirs(default_firmware_dir)
