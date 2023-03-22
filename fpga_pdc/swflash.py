@@ -13,10 +13,11 @@ from pexpect import pxssh
 import pexpect
 import sys
 import os
-import time
 
 # global 
 pcInfo = {
+    "fpga01": {'name': 'svc.fpgatest', 'ip': 'fpga01.cixcomputing.cn', 'passwd': 'Cix@88008080'},
+    "fpga02": {'name': 'svc.fpgatest', 'ip': 'fpga02.cixcomputing.cn', 'passwd': 'Cix@88008080'},
     "fpga03": {'name': 'svc.fpgatest', 'ip': 'fpga03.cixcomputing.cn', 'passwd': 'Cix@88008080'},
     "fpga04": {'name': 'svc.fpgatest', 'ip': 'fpga04.cixcomputing.cn', 'passwd': 'Cix@88008080'},
     "fpga05": {'name': 'svc.fpgatest', 'ip': 'fpga05.cixcomputing.cn', 'passwd': 'Cix@88008080'},
@@ -52,11 +53,13 @@ def bOP(ss, oplist):
 if __name__ == "__main__":
     # get target PC arg
     tPC = sys.argv[1].split('-')[0]
-    print(tPC)
+
     # default fw path in remote PC
-    dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % (tPC)
+    dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % tPC
     # temp path for uploader fw
-    tfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/tfw/cix_flash_all.bin" % (tPC)
+    tfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/tfw/cix_flash_all.bin" % tPC
+    print(dfwPath)
+    print(tfwPath)
     pcSSH = pSSH(pcInfo[tPC])
     ffwPath = dfwPath
     # whether to update fw
