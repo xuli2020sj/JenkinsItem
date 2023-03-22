@@ -13,6 +13,7 @@ from pexpect import pxssh
 import pexpect
 import sys
 import os
+import argparse
 
 # global 
 pcInfo = {
@@ -50,30 +51,41 @@ def bOP(ss, oplist):
     return heid(eid)
 
 
+def flash_fm(target_pc):
+    pcSSH = pSSH(target_pc)
+    flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
+    return bOP(pcSSH, flList)
+
+
 if __name__ == "__main__":
-    # get target PC arg
-    tPC = sys.argv[1].split('-')[0]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--job', '-j', required=True, type=str)
+    parser.add_argument('--firmware', '-f', required=False, type=str)
+    parser.add_argument('--default', '-a', required=False, type=str)
+    args = parser.parse_args()
+    firmware = args.firmware
+    job_list = args.job.split('_')
 
-    # default fw path in remote PC
-    dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % tPC
-    # temp path for uploader fw
-    tfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/tfw/cix_flash_all.bin" % tPC
+    dir_name = job_list[2]
+    if len(job_list) > 3 and job_list[3] != "Admin":
+        dir_name += job_list[3]
+    root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
+    default_firmware_dir = root_dir + "/default_firmware"
+    temp_firmware_dir = root_dir + "/temp_firmware"
+    if not os.path.exists(root_dir):
+        os.makedirs(root_dir)
+        os.makedirs(default_firmware_dir)
+        os.makedirs(temp_firmware_dir)
 
-    print(sys.argv)
-
-    pcSSH = pSSH(pcInfo[tPC])
-    ffwPath = dfwPath
     # whether to update fw
-    if len(sys.argv) >= 3 and sys.argv[2] != 'null':
-        os.system("python3 " + cPath + "scp.py " + sys.argv[2] + " " + tfwPath)
-        ffwPath = tfwPath
-    if len(sys.argv) >= 4 and sys.argv[2] != 'null' and sys.argv[3] == "Yes":
-        os.system("python3 " + cPath + "scp.py " + sys.argv[2] + " " + dfwPath)
+    if job_list.count('Admin') and args.default == "Yes":
+        os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir)
 
-    # try to flash the FW
-    # os.system("which pdc_linux_console")
+    # whether to flash default fw
+    ffwPath = default_firmware_dir + "/cix_flash_all.bin"
+    if os.path.exists(firmware):
+        os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir)
+        ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
 
-    # flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
-    # rv = bOP(pcSSH, flList)
-
+    flash_fm(pcInfo[job_list[2]])
     sys.exit(0)
