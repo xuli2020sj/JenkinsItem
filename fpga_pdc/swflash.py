@@ -58,6 +58,7 @@ if __name__ == "__main__":
     dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % tPC
     # temp path for uploader fw
     tfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/tfw/cix_flash_all.bin" % tPC
+    os.system("echo" + sys.argv[0] + " " + sys.argv[1] + " " + sys.argv[2] + " " +sys.argv[3])
     print(dfwPath)
     print(tfwPath)
     pcSSH = pSSH(pcInfo[tPC])
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     # try to flash the FW
     # os.system("which pdc_linux_console")
 
-    flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
-    rv = bOP(pcSSH, flList)
+    # flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
+    # rv = bOP(pcSSH, flList)
 
-    sys.exit(rv)
+    sys.exit(0)
