@@ -75,8 +75,10 @@ if __name__ == "__main__":
     root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
     default_firmware_dir = root_dir + "/default_firmware"
     temp_firmware_dir = root_dir + "/temp_firmware"
+    logging.info(root_dir)
     logging.info(default_firmware_dir)
     logging.info(temp_firmware_dir)
+
     if not os.path.exists(root_dir):
         os.makedirs(root_dir)
         os.makedirs(default_firmware_dir)

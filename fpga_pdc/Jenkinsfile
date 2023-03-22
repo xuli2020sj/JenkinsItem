@@ -52,7 +52,7 @@ pipeline{
                 pname=`echo $SH_JBN`
                 # adm=`echo $SH_JBN | cut -d'_' -f4 | tr A-Z a-z`
                 # [ -z "$adm" ] && eqfw='null'
-                python3 -u fpga_pdc/swflash.py -j $pname -f $eqfw -a $SH_ADF
+                python3 -u fpga_pdc/swflash.py -j $pname -f non_default_flash_fw -a $SH_ADF
                 '''
             }
         }
