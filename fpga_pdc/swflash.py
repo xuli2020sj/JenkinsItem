@@ -54,8 +54,7 @@ def bOP(ss, oplist):
     return heid(eid)
 
 
-def flash_fm(target_pc):
-    pcSSH = pSSH(target_pc)
+def flash_fm():
     flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
     return bOP(pcSSH, flList)
 
@@ -68,6 +67,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     firmware = args.firmware
     job_list = args.job.split('_')
+    targetPC = pcInfo[job_list[2]]
+
+    # ssh 登录
+    pcSSH = pSSH(targetPC)
 
     dir_name = job_list[2]
     if len(job_list) > 3 and job_list[3] != "Admin":
@@ -77,10 +80,10 @@ if __name__ == "__main__":
     temp_firmware_dir = root_dir + "/temp_firmware"
 
     if not os.path.exists(root_dir):
-        logging.info("Dir didn't exist! Start to create dir " + root_dir)
-        os.makedirs(root_dir)
-        os.makedirs(default_firmware_dir)
-        os.makedirs(temp_firmware_dir)
+        logging.info("Dir didn't exist! Start to create dir: " + root_dir)
+        bOP(pcSSH, ["mkdir " + root_dir, "", 3])
+        bOP(pcSSH, ["mkdir " + default_firmware_dir, "", 3])
+        bOP(pcSSH, ["mkdir " + temp_firmware_dir, "", 3])
 
     # whether to update fw
     if job_list.count('Admin') and args.default == "Yes":
@@ -92,5 +95,5 @@ if __name__ == "__main__":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir)
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
 
-    flash_fm(pcInfo[job_list[2]])
+    flash_fm()
     sys.exit(0)
