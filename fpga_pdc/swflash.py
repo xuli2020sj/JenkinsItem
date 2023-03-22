@@ -58,9 +58,9 @@ if __name__ == "__main__":
     dfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/dfw/cix_flash_all.bin" % tPC
     # temp path for uploader fw
     tfwPath = "/home/svc.fpgatest/devops/lab_loader/%s/tfw/cix_flash_all.bin" % tPC
-    os.system("echo" + sys.argv[0] + " " + sys.argv[1] + " " + sys.argv[2])
-    print(dfwPath)
-    print(tfwPath)
+
+    print(sys.argv)
+
     pcSSH = pSSH(pcInfo[tPC])
     ffwPath = dfwPath
     # whether to update fw
