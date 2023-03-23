@@ -55,14 +55,7 @@ def bOP(ss, oplist):
                       pexpect.EOF, pexpect.TIMEOUT
                   ] + [ep]
     eid = ss.expect(expect_list, timeout=to)
-
     return heid(eid)
-
-
-def flash_fm():
-    flList = ["pdc_linux_console -i " + ffwPath, "checking image.*OK", 240]
-    return bOP(pcSSH, flList)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -78,12 +71,12 @@ if __name__ == "__main__":
     # ssh 登录
     pcSSH = pSSH(targetPC)
 
+    # support sub
     dir_name = job_list[2]
     if len(job_list) > 3 and job_list[3] != "Admin":
         dir_name += job_list[3]
     root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
-    if len(job_list) == 4 and job_list[3] != "Admin":
-        root_dir += job_list[3]
+
     bOP(pcSSH, ["mkdir " + root_dir, "", 3])
     default_firmware_dir = root_dir + "/default_firmware"
     temp_firmware_dir = root_dir + "/temp_firmware"
@@ -93,6 +86,9 @@ if __name__ == "__main__":
     # whether to update fw
     if job_list.count('Admin') and args.default == "Yes" and firmware != "null":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir + "/cix_flash_all.bin")
+
+    # check default fw exists
+    bOP(pcSSH, ["ls " + default_firmware_dir, "cix_flash_all.bin", 3])
 
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
