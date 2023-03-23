@@ -83,11 +83,11 @@ if __name__ == "__main__":
     default_firmware_dir = root_dir + "/default_firmware"
     temp_firmware_dir = root_dir + "/temp_firmware"
 
-    if not os.path.exists(root_dir):
-        logging.info("Dir didn't exist! Start to create dir: " + root_dir)
-        bOP(pcSSH, ["mkdir " + root_dir, "", 3])
-        bOP(pcSSH, ["mkdir " + default_firmware_dir, "", 3])
-        bOP(pcSSH, ["mkdir " + temp_firmware_dir, "", 3])
+
+
+    bOP(pcSSH, ["mkdir " + root_dir, "", 3])
+    bOP(pcSSH, ["mkdir " + default_firmware_dir, "", 3])
+    bOP(pcSSH, ["mkdir " + temp_firmware_dir, "", 3])
 
     # whether to update fw
     if job_list.count('Admin') and args.default == "Yes":
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
-    if os.path.exists(firmware):
+    if firmware == "non_default_flash_fw":
         logging.info("Flashing uploaded firmware")
         os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir + "/cix_flash_all.bin")
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
