@@ -90,7 +90,7 @@ if __name__ == "__main__":
     bOP(pcSSH, ["mkdir " + temp_firmware_dir, "", 3])
 
     # whether to update fw
-    if job_list.count('Admin') and args.default == "Yes":
+    if job_list.count('Admin') and args.default == "Yes" and firmware != "null":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir + "/cix_flash_all.bin")
 
     # whether to flash default fw
