@@ -91,12 +91,12 @@ if __name__ == "__main__":
 
     # whether to update fw
     if job_list.count('Admin') and args.default == "Yes":
-        os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir)
+        os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir + "/cix_flash_all.bin")
 
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
     if os.path.exists(firmware):
-        os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir)
+        os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir + "/cix_flash_all.bin")
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
 
     expect_list = [
