@@ -38,6 +38,7 @@ def pSSH(pinfo):
     chdPid.login(pinfo['ip'], pinfo['name'], pinfo['passwd'])
     return chdPid
 
+
 def heid(eid):
     if eid == 0 or eid == 1:
         return 1
@@ -51,8 +52,8 @@ def bOP(ss, oplist):
     ss.sendline(op)
 
     expect_list = [
-        pexpect.EOF, pexpect.TIMEOUT
-    ] + [ep]
+                      pexpect.EOF, pexpect.TIMEOUT
+                  ] + [ep]
     eid = ss.expect(expect_list, timeout=to)
 
     return heid(eid)
@@ -71,6 +72,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     firmware = args.firmware
     job_list = args.job.split('_')
+
     targetPC = pcInfo[job_list[2].lower()]
 
     # ssh 登录
@@ -80,12 +82,11 @@ if __name__ == "__main__":
     if len(job_list) > 3 and job_list[3] != "Admin":
         dir_name += job_list[3]
     root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
+    if len(job_list) == 4 and job_list[3] != "Admin":
+        root_dir += job_list[3]
+    bOP(pcSSH, ["mkdir " + root_dir, "", 3])
     default_firmware_dir = root_dir + "/default_firmware"
     temp_firmware_dir = root_dir + "/temp_firmware"
-
-
-
-    bOP(pcSSH, ["mkdir " + root_dir, "", 3])
     bOP(pcSSH, ["mkdir " + default_firmware_dir, "", 3])
     bOP(pcSSH, ["mkdir " + temp_firmware_dir, "", 3])
 
