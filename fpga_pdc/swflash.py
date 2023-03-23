@@ -38,7 +38,6 @@ def pSSH(pinfo):
     chdPid.login(pinfo['ip'], pinfo['name'], pinfo['passwd'])
     return chdPid
 
-
 def heid(eid):
     if eid == 0 or eid == 1:
         return 1
@@ -50,7 +49,12 @@ def heid(eid):
 def bOP(ss, oplist):
     op, ep, to = oplist
     ss.sendline(op)
-    eid = ss.expect([pexpect.EOF, pexpect.TIMEOUT] + [ep], timeout=to)
+
+    expect_list = [
+        pexpect.EOF, pexpect.TIMEOUT
+    ] + [ep]
+    eid = ss.expect(expect_list, timeout=to)
+
     return heid(eid)
 
 
@@ -95,5 +99,15 @@ if __name__ == "__main__":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir)
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
 
-    flash_fm()
-    sys.exit(0)
+    expect_list = [
+        pexpect.EOF,
+        pexpect.TIMEOUT,
+        "fail",
+        "checking image.*OK"
+    ]
+    pcSSH.sendline("pdc_linux_console -i " + ffwPath)
+    index = pcSSH.expect(expect_list, timeout=240)
+    if index == 0 or index == 1 or index == 2:
+        sys.exit(1)
+    else:
+        sys.exit(0)
