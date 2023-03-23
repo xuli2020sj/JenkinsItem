@@ -96,8 +96,11 @@ if __name__ == "__main__":
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
     if os.path.exists(firmware):
+        logging.info("Flashing uploaded firmware")
         os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir + "/cix_flash_all.bin")
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
+    else:
+        logging.info("Flashing default firmware")
 
     expect_list = [
         pexpect.EOF,
@@ -107,6 +110,7 @@ if __name__ == "__main__":
     ]
     pcSSH.sendline("pdc_linux_console -i " + ffwPath)
     index = pcSSH.expect(expect_list, timeout=240)
+
     if index == 0 or index == 1 or index == 2:
         sys.exit(1)
     else:
