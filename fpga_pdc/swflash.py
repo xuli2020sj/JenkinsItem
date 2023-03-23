@@ -67,7 +67,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     firmware = args.firmware
     job_list = args.job.split('_')
-    targetPC = pcInfo[job_list[2]]
+    targetPC = pcInfo[job_list[2].lower()]
 
     # ssh 登录
     pcSSH = pSSH(targetPC)
@@ -95,5 +95,5 @@ if __name__ == "__main__":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + temp_firmware_dir)
         ffwPath = temp_firmware_dir + "/cix_flash_all.bin"
 
-    flash_fm()
+    # flash_fm()
     sys.exit(0)
