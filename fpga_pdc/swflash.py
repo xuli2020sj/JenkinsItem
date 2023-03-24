@@ -66,11 +66,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     firmware = args.firmware
     job_list = args.job.split('_')
-
-    targetPC = pcInfo[job_list[2].lower()]
+    targetPC = job_list[2].lower()
+    targetPC_info = pcInfo[targetPC]
     logging.info("Target PC is {}".format(targetPC))
     # ssh 登录
-    pcSSH = pSSH(targetPC)
+    pcSSH = pSSH(targetPC_info)
 
     # support sub
     dir_name = job_list[2]
