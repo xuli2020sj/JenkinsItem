@@ -57,6 +57,7 @@ def bOP(ss, oplist):
     eid = ss.expect(expect_list, timeout=to)
     return heid(eid)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--job', '-j', required=True, type=str)
@@ -99,9 +100,9 @@ if __name__ == "__main__":
     logging.info("Default FM exist.")
     if id != 2:
         logging.info("Default FM didn't exist. Copying file from commonFW")
-        pcSSH.expect("cp /home/svc.fpgatest/devops/lab_loader/commonFW/cix_flash_all.bin "
-                     "/home/svc.fpgatest/devops/lab_loader/{}/default_firmware/".format(dir_name), expect_list1,
-                     timeout=10)
+        pcSSH.sendline("cp /home/svc.fpgatest/devops/lab_loader/commonFW/cix_flash_all.bin "
+                       "/home/svc.fpgatest/devops/lab_loader/{}/default_firmware/".format(dir_name))
+        pcSSH.expect(expect_list1, timeout=10)
 
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
