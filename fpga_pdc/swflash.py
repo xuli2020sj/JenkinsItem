@@ -75,6 +75,7 @@ if __name__ == "__main__":
     dir_name = job_list[2]
     if len(job_list) > 3 and job_list[3] != "Admin":
         dir_name += job_list[3]
+        targetPC += job_list[3]
     root_dir = "/home/svc.fpgatest/devops/lab_loader/" + dir_name
 
     bOP(pcSSH, ["mkdir " + root_dir, "", 3])
@@ -87,8 +88,17 @@ if __name__ == "__main__":
     if job_list.count('Admin') and args.default == "Yes" and firmware != "null":
         os.system("python3 " + cPath + "scp.py " + firmware + " " + default_firmware_dir + "/cix_flash_all.bin")
 
-    # check default fw exists
-    bOP(pcSSH, ["ls " + default_firmware_dir, "cix_flash_all.bin", 3])
+    # check default fw exists, otherwise copy default from /home/svc.fpgatest/devops/lab_loader/commonFW
+    expect_list1 = [
+        pexpect.EOF,
+        pexpect.TIMEOUT,
+        "cix_flash_all.bin"
+    ]
+    id = pcSSH.expect("ls " + default_firmware_dir, expect_list1, timeout=3)
+    if id != 2:
+        pcSSH.expect("cp /home/svc.fpgatest/devops/lab_loader/commonFW/cix_flash_all.bin "
+                     "/home/svc.fpgatest/devops/lab_loader/{}/default_firmware/".format(dir_name), expect_list1,
+                     timeout=3)
 
     # whether to flash default fw
     ffwPath = default_firmware_dir + "/cix_flash_all.bin"
@@ -103,10 +113,19 @@ if __name__ == "__main__":
         pexpect.EOF,
         pexpect.TIMEOUT,
         "fail",
-        "checking image.*OK"
+        "checking image.*OK",
+        "Flashing PASS"
     ]
-    pcSSH.sendline("pdc_linux_console -i " + ffwPath)
-    index = pcSSH.expect(expect_list, timeout=240)
+
+    # when index is 0, the job is successful
+    index = 0
+    sf100_list = ["fpga01", "fpga02", "fpga03SUB02"]
+    if targetPC in sf100_list:
+        pcSSH.sendline("qflash.py -i " + ffwPath)
+        index = pcSSH.expect(expect_list, timeout=240)
+    else:
+        pcSSH.sendline("pdc_linux_console -i " + ffwPath)
+        index = pcSSH.expect(expect_list, timeout=240)
 
     if index == 0 or index == 1 or index == 2:
         sys.exit(1)
