@@ -125,6 +125,7 @@ if __name__ == "__main__":
     # when index is 0, the job is successful
     index = 0
     sf100_list = ["fpga01", "fpga02", "fpga03SUB02"]
+    logging.info("target PC is {}".format(targetPC))
     if targetPC in sf100_list:
         pcSSH.sendline("qflash.py -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
