@@ -68,7 +68,7 @@ if __name__ == "__main__":
     job_list = args.job.split('_')
 
     targetPC = pcInfo[job_list[2].lower()]
-
+    logging.info("Target PC is {}".format(targetPC))
     # ssh 登录
     pcSSH = pSSH(targetPC)
 
