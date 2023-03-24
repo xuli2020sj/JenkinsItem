@@ -96,6 +96,7 @@ if __name__ == "__main__":
     ]
     id = pcSSH.expect("ls " + default_firmware_dir, expect_list1, timeout=3)
     if id != 2:
+        logging.info("Default FM didn't exist. Copying file from commonFW")
         pcSSH.expect("cp /home/svc.fpgatest/devops/lab_loader/commonFW/cix_flash_all.bin "
                      "/home/svc.fpgatest/devops/lab_loader/{}/default_firmware/".format(dir_name), expect_list1,
                      timeout=3)
@@ -117,6 +118,7 @@ if __name__ == "__main__":
         "Flashing PASS"
     ]
 
+    logging.info("Flashing firmware from {}".format(ffwPath))
     # when index is 0, the job is successful
     index = 0
     sf100_list = ["fpga01", "fpga02", "fpga03SUB02"]
@@ -128,6 +130,8 @@ if __name__ == "__main__":
         index = pcSSH.expect(expect_list, timeout=240)
 
     if index == 0 or index == 1 or index == 2:
+        logging.info("Flashing failed")
         sys.exit(1)
     else:
+        logging.info("Flashing succeed")
         sys.exit(0)
