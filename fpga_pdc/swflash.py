@@ -94,7 +94,8 @@ if __name__ == "__main__":
         pexpect.TIMEOUT,
         "cix_flash_all.bin"
     ]
-    id = pcSSH.expect("ls " + default_firmware_dir, expect_list1, timeout=10)
+    pcSSH.sendline("ls " + default_firmware_dir)
+    id = pcSSH.expect(expect_list1, timeout=10)
     logging.info("Default FM exist.")
     if id != 2:
         logging.info("Default FM didn't exist. Copying file from commonFW")
