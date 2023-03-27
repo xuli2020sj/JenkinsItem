@@ -1,0 +1,52 @@
+pipeline{
+    agent { label 'verify' }
+    options { retry(2) }
+    post {
+        success{
+                wrap([$class: 'BuildUser']) {
+                   script {
+                       BUILD_USER = "${env.BUILD_USER}"
+                       BUILD_USER_EMAIL = "${env.BUILD_USER_EMAIL}"
+                   }
+				}
+            mail bcc: '', body: "Dear ${BUILD_USER},\n\n\tBuild secced. Please check the result.",
+
+            from: 'devops@cixcomputing.com', replyTo: '',
+            subject: "Lab loader finished",
+            to: "${BUILD_USER_EMAIL}"
+        }
+        failure {
+                wrap([$class: 'BuildUser']) {
+                   script {
+                       BUILD_USER = "${env.BUILD_USER}"
+                       BUILD_USER_EMAIL = "${env.BUILD_USER_EMAIL}"
+                   }
+				}
+            mail bcc: '', body: "Dear ${BUILD_USER},\n\n\tBuild failed. Please check the result.",
+            cc: 'li.xu@cixtech.com',
+            from: 'devops@cixcomputing.com', replyTo: '',
+            subject: "Lab loader finished",
+            to: "${BUILD_USER_EMAIL}"
+        }
+    }
+    parameters {
+        stashedFile(name: 'non_default_flash_fw',
+        description: 'Usually this argment should NOT be used. If you have special requirements to firmware, upload the selected non_default flash firmware like cix_flash_all.bin here.')
+        choice(name: 'as_default', choices: ['No', 'Yes'],
+        description: 'Whether to update the uploaded FW as default firmware.')
+    }
+    environment {
+        SH_ADF = "$params.as_default"
+        SH_JBN = "${JOB_BASE_NAME}"
+    }
+    stages {
+        stage('PDC stress test') {
+            steps{
+                echo 'This is Firware Flashing step'
+                unstash 'non_default_flash_fw'
+                sh '''
+                '''
+            }
+        }
+    }
+}
