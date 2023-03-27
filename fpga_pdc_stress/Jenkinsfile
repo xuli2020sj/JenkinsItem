@@ -31,7 +31,7 @@ pipeline{
     }
     parameters {
         stashedFile(name: 'non_default_flash_fw',
-        description: 'Usually this argment should NOT be used. If you have special requirements to firmware, upload the selected non_default flash firmware like cix_flash_all.bin here.')
+        description: '')
         choice(name: 'as_default', choices: ['No', 'Yes'],
         description: 'Whether to update the uploaded FW as default firmware.')
     }
@@ -45,6 +45,7 @@ pipeline{
                 echo 'This is Firware Flashing step'
                 unstash 'non_default_flash_fw'
                 sh '''
+                python3 -u fpga_pdc_stress/main.py
                 '''
             }
         }
