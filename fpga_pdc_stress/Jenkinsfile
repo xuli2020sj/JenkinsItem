@@ -9,8 +9,8 @@ pipeline{
                        BUILD_USER_EMAIL = "${env.BUILD_USER_EMAIL}"
                    }
 				}
-            mail bcc: '', body: "Dear ${BUILD_USER},\n\n\tBuild secced. Please check the result.",
-            attachmentsPattern: 'latest/main.py',
+            mail bcc: '',
+            body: "Dear ${BUILD_USER},\n\n\tBuild secced. Please check the result.",
             from: 'devops@cixcomputing.com', replyTo: '',
             subject: "Lab loader finished",
             to: "${BUILD_USER_EMAIL}"
