@@ -130,7 +130,7 @@ if __name__ == "__main__":
         pcSSH.sendline("qflash.py -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
     else:
-        pcSSH.sendline("pdc_linux_console -i " + ffwPath)
+        pcSSH.sendline("~/devops/lab_loader/commonFW/pdc_linux_console -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
 
     if index == 0 or index == 1 or index == 2:
