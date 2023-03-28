@@ -117,7 +117,7 @@ if __name__ == "__main__":
         pexpect.EOF,
         pexpect.TIMEOUT,
         "fail",
-        "checking image.*OK",
+        "flashing image.*OK",
         "Flashing PASS"
     ]
 
