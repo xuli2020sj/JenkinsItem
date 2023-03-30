@@ -6,9 +6,11 @@ import global_val
 import pytest
 
 
-@pytest.mark.repeat(500)
 def test_flashing():
-    p = subprocess.Popen(r'~/devops/lab_loader/commonFW/pdc_linux_console -i ~/devops/lab_loader/commonFW/cix_flash_all.bin',
+    stopFlag = global_val.get_value('stopFlag')
+    if stopFlag:
+        pytest.exit("Program stop!")
+    p = subprocess.Popen(r'~/test/commonFW/pdc_linux_console -i ~/test/commonFW/cix_flash_all.bin',
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
                          shell=True
@@ -18,7 +20,7 @@ def test_flashing():
     logging.info('flashing end')
     out = p.stdout.read()
     logging.info(out.decode("utf8"))
-    pattern = re.compile('checking image.*OK')
+    pattern = re.compile('flashing image.*OK')
     result = re.search(pattern, out.decode("utf8"))
     assert result is not None
 
