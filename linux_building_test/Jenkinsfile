@@ -1,5 +1,5 @@
 pipeline{
-    agent { label 'compiler' }
+    agent { label 'verify' }
     post {
         success{
                 wrap([$class: 'BuildUser']) {
