@@ -1,5 +1,5 @@
 pipeline{
-    agent { label 'verify' }
+    agent { label 'compiler' }
     options { retry(2) }
     post {
         success{
@@ -30,22 +30,41 @@ pipeline{
         }
     }
     parameters {
-        stashedFile(name: 'non_default_flash_fw',
-        description: '')
-        choice(name: 'as_default', choices: ['No', 'Yes'],
-        description: 'Whether to update the uploaded FW as default firmware.')
+       stashedFile(name: 'flash_fw',
+        description: 'Please upload the files for the stress test')
+
+        stashedFile(name: 'pdc_flash_tool',
+        description: 'Please upload the pdc flashing tool')
+
+        string(name: 'Number_of_repetitions', defaultValue: '1',
+        description: 'Please enter the number of stress test repetitions.')
+
+        choice(name: 'FPGA_PLAT', choices: ['FPGA01','FPGA02','FPGA03SUB1','FPGA03SUB2','FPGA03SUB3','FPGA03SUB4','FPGA04','FPGA05','FPGA06'],
+        description: 'Please select the PC for the stress test.')
     }
     environment {
-        SH_ADF = "$params.as_default"
         SH_JBN = "${JOB_BASE_NAME}"
+
+        SH_FPLAT = "$params.FPGA_PLAT"
+
+        TOLIST = "cix.sw@cixtech.com anthony.tian@cixtech.com peter.zhang@cixtech.com fugang.duan@cixtech.com guoyin.chen@cixtech.com robin.wang@cixtech.com peter.chen@cixtech.com zhan.lou@cixtech.com cagent.zhang@cixtech.com"
+        CCLIST = "adeline.wang@cixtech.com gang.liu@cixtech.com"
+        FCCLIST = "anthony.tian@cixtech.com"
+        FTOLIST = "anthony.tian@cixtech.com"
     }
     stages {
         stage('PDC stress test') {
             steps{
                 echo 'This is Firware Flashing step'
-                unstash 'non_default_flash_fw'
+                unstash 'flash_fw'
+                unstash 'pdc_flash_tool'
                 sh '''
-                python3 -u fpga_pdc_stress/main.py
+                pwd
+                echo $SH_FPLAT
+                echo $Number_of_repetitions
+                echo $SH_JBN
+
+                #python3 -u fpga_pdc_stress/main.py
                 '''
             }
         }
