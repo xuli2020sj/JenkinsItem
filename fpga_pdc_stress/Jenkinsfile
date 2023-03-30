@@ -60,6 +60,7 @@ pipeline{
                 unstash 'pdc_flash_tool'
                 sh '''
                 pwd
+                tree
                 echo $SH_FPLAT
                 echo $Number_of_repetitions
                 echo $SH_JBN
