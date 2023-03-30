@@ -1,5 +1,5 @@
 pipeline{
-    agent { label 'compiler' }
+    agent { label 'verify' }
     options { retry(2) }
     post {
         success{
