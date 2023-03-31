@@ -6,8 +6,11 @@ import time
 import cixlogging
 import pytest
 
+import global_var
+from global_var import set_value, get_value
+
 REPO_INFO = "ssh://git@gitmirror.cixcomputing.com/linux_repo/cix-manifest -b cix_master"
-BUILDING_DIR = "/home/svc.swciuser/building_test/{}".format(time.strftime('%Y%m%d_%H%M%S', time.localtime()))
+BUILDING_DIR = "/data/devops/li.xu/{}".format(time.strftime('%Y%m%d_%H%M%S', time.localtime()))
 GIT_SERVER = 'gitmirror.cixtech.com'
 
 
@@ -19,7 +22,6 @@ def exec_cmd(command, cmd_dir=""):
     else:
         proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, cwd=cmd_dir,
                                 close_fds=True)
-
     try:
         outs, errs = proc.communicate()
     except Exception as e:
@@ -27,8 +29,8 @@ def exec_cmd(command, cmd_dir=""):
         proc.kill()
         outs, errs = proc.communicate()
 
-    logging.error(errs)
-    logging.info(outs)
+    logging.error(errs.decode('utf-8'))
+    logging.info(outs.decode('utf-8'))
     return proc.returncode
 
 
@@ -100,43 +102,46 @@ def env_build():
 def fill_all():
     global release, way_list, group_list, platform_list, signature_list, type_list
     release = ['cix_sky1_Alpha0.4-rc1']
-    way_list = ['shell', 'env']
+    way_list = ['shell']
     group_list = ['cix', 'cix,private', 'cix,sec']
     platform_list = ['emu', 'fpga']
-    signature_list = ['rsa', 'sm2']
-    type_list = ['all', 'minimum']
+    signature_list = ['rsa3072', 'sm2']
+    type_list = ['all']
 
 
-
-
+# release = ['cix_sky1_Alpha0.4-rc1']
+# way_list = ['shell', 'env']
+# group_list = ['cix', 'cix,private', 'cix,sec']
+# platform_list = ['emu', 'fpga']
+# signature_list = ['rsa3072', 'sm2']
+# type_list = ['minimum', 'all']
 
 if __name__ == '__main__':
-
     signal.signal(signal.SIGINT, quit_clean)
     signal.signal(signal.SIGALRM, quit_clean)
 
     parser = argparse.ArgumentParser(prog='build test', description='Do building test. ')
-    parser.add_argument('--release', '-r', required=True, type=str, help='Give the target release to test like '
-                                                                         'cix_sky1_Alpha0.4-rc1.'
+    parser.add_argument('--release', '-r', required=False, type=str, help='Give the target release to test like '
+                                                                          'cix_sky1_Alpha0.4-rc1.'
                         , choices=['cix_sky1_Alpha0.4-rc1'], action='append')
-    parser.add_argument('--way', '-w', required=True, type=str, help='Give the build way like shell or env or all for '
-                                                                     'all possible way'
+    parser.add_argument('--way', '-w', required=False, type=str, help='Give the build way like shell or env or all for '
+                                                                      'all possible way'
                         , choices=['shell', 'env'], action='append')
-    parser.add_argument('--group', '-g', required=True, type=str, help='Give the code group like private, cix, sec '
-                                                                       'or all for all groups'
+    parser.add_argument('--group', '-g', required=False, type=str, help='Give the code group like private, cix, sec '
+                                                                        'or all for all groups'
                         , choices=['cix', 'cix,private', 'cix,sec'], action='append')
-    parser.add_argument('--platform', '-p', required=True, type=str, help='Give the platform to build like fpga, '
-                                                                          'emu, sky1 or all for all possible '
-                                                                          'platforms'
+    parser.add_argument('--platform', '-p', required=False, type=str, help='Give the platform to build like fpga, '
+                                                                           'emu, sky1 or all for all possible '
+                                                                           'platforms'
                         , choices=['emu', 'fpga'], action='append')
-    parser.add_argument('--signature', '-s', required=True, type=str, help='Give the signature way like sm2 or rsa '
-                                                                           'or all for all possible platforms'
-                        , choices=['rsa', 'sm2'], action='append')
-    parser.add_argument('--type', '-t', required=True, type=str, help='Give the build type like minimum, all or full '
-                                                                      'for all possible values.'
+    parser.add_argument('--signature', '-s', required=False, type=str, help='Give the signature way like sm2 or rsa '
+                                                                            'or all for all possible platforms'
+                        , choices=['rsa3072', 'sm2'], action='append')
+    parser.add_argument('--type', '-t', required=False, type=str, help='Give the build type like minimum, all or full '
+                                                                       'for all possible values.'
                         , choices=['all', 'minimum'], action='append')
-    parser.add_argument('--all', '-a', required=False, type=bool, help='Choose whether to test all building'
-                        , default=False)
+    parser.add_argument('--all', '-a', required=False, help='Choose whether to test all building'
+                        , default=False, action='store_true')
     args = parser.parse_args()
 
     release = args.release
@@ -150,6 +155,15 @@ if __name__ == '__main__':
     if choose_all:
         fill_all()
 
+    global_var.init()
+    global_var.set_value("release", release)
+    global_var.set_value("way_list", way_list)
+    global_var.set_value("group_list", group_list)
+    global_var.set_value("platform_list", platform_list)
+    global_var.set_value("signature_list", signature_list)
+    global_var.set_value("type_list", type_list)
+    global_var.set_value("BUILDING_DIR", BUILDING_DIR)
+
     logging.info("Building dir is: {}".format(BUILDING_DIR))
     logging.info("type_list is: {}".format(type_list))
     logging.info("group_list is: {}".format(group_list))
@@ -157,9 +171,14 @@ if __name__ == '__main__':
     logging.info("platform_list is: {}".format(platform_list))
     logging.info("signature_list is: {}".format(signature_list))
 
-    repo_sync(False)
-    for way in way_list:
-        if way == "shell":
-            shell_build()
-        elif way == "env":
-            env_build()
+    repo_sync(is_release=False)
+
+    test_cmd = "tests_building.py::test_shell_building".format("test_shell_building")
+    pytest.main(["-s", test_cmd, '--html={}.html'.format(time.strftime('%Y%m%d_%H%M%S', time.localtime())),
+                 '--self-contained-html', '--capture=sys'])
+
+    # for way in way_list:
+    #     if way == "shell":
+    #         shell_build()
+    #     elif way == "env":
+    #         env_build()

@@ -30,17 +30,19 @@ pipeline{
     }
 
     parameters {
-        stashedFile(name: 'flash_fw',
-        description: 'Please upload the files for the stress test')
-
-        stashedFile(name: 'pdc_flash_tool',
-        description: 'Please upload the pdc flashing tool')
 
         string(name: 'Number_of_repetitions', defaultValue: '1', 
         description: 'Please enter the number of stress test repetitions.')
         
         choice(name: 'FPGA_PLAT', choices: ['FPGA01','FPGA02','FPGA03SUB1','FPGA03SUB2','FPGA03SUB3','FPGA03SUB4','FPGA04','FPGA05','FPGA06'],
         description: 'Please select the PC for the stress test.')
+
+        extendedChoice(name: 'way', choices: ['shell','env'],
+        description: 'Please select the way to do building test.')
+
+        extendedChoice(name: 'repo', choices: ['cix','cix,private', 'cix,sec'],
+        description: 'Please select the repo for the stress test.')
+
     }
     environment {
         SH_JBN = "${JOB_BASE_NAME}"
@@ -56,8 +58,6 @@ pipeline{
         stage('PDC stress test') {
             steps{
                 echo 'This is Firware Flashing step'
-                unstash 'flash_fw'
-                unstash 'pdc_flash_tool'
                 sh '''
                 pwd
                 echo $SH_FPLAT

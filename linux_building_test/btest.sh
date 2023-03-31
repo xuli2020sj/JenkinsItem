@@ -17,7 +17,7 @@
 #############################################################################
 # File Name:     btest.sh
 # Total Tests:   1
-# Description:   Do building test.
+# Description:   Do building test. 
 
 # args:
 # arg1: -w way           Give the buid way like shell or env or all for all possible way
@@ -39,7 +39,7 @@ usage()
 
     File Name:     btest.sh
     Total Tests:   1
-    Description:   Do building test.
+    Description:   Do building test. 
 
     args:
     arg1: -w way           Give the buid way like shell or env or full for all possible way.
@@ -80,7 +80,7 @@ setup()
     pltList="emu fpga"
     sgnList="rsa sm2"
     typList="all minimum"
-
+    
     # build directory
     bDir=~/btest/`date +%Y%m%d_%H%M%S_%N |cut -b1-20`
     mkdir -p $bDir/logs
@@ -140,7 +140,7 @@ crv()
     echo $newV > $rcf
 }
 
-# Function:     ufl
+# Function:     ufl 
 #
 # Description   - update fail list
 #
