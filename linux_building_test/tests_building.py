@@ -1,4 +1,7 @@
+import logging
+import subprocess, os
 import pytest
+
 import global_var
 from btest import exec_cmd, BUILDING_DIR
 from global_var import get_value
@@ -27,10 +30,7 @@ def test_shell_building(group, build_type, platform, signature):
 @pytest.mark.parametrize("build_type", get_value("type_list"))
 def test_env_building(group, build_type, platform, signature):
     cmd_exec_dir = "{}/{}".format(BUILDING_DIR, group)
-    exec_cmd(". ./build-scripts/envtool.sh", cmd_exec_dir)
-    cmd_config = "config -p cix -f debian -k {} -b {}".format(signature, platform)
-    cmd_build = "build {}".format(build_type)
-    cmd_clean = "clean {}".format(build_type)
-    exec_cmd(cmd_config, cmd_exec_dir)
-    exec_cmd(cmd_build, cmd_exec_dir)
-    exec_cmd(cmd_clean, cmd_exec_dir)
+    cmd_config = "'-p cix -f debian -k {} -b {}'".format(signature, platform)
+    cmd_source = "./build-scripts/envtool.sh"
+
+    assert exec_cmd("./env_building.sh {} {} {} {}".format(cmd_exec_dir, cmd_source, cmd_config, build_type)) == 0

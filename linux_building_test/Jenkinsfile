@@ -31,23 +31,45 @@ pipeline{
 
     parameters {
 
-        string(name: 'Number_of_repetitions', defaultValue: '1', 
-        description: 'Please enter the number of stress test repetitions.')
-        
-        choice(name: 'FPGA_PLAT', choices: ['FPGA01','FPGA02','FPGA03SUB1','FPGA03SUB2','FPGA03SUB3','FPGA03SUB4','FPGA04','FPGA05','FPGA06'],
-        description: 'Please select the PC for the stress test.')
+        string(name: 'Input_Parameter', defaultValue: '-a',
+        description: 'usage: building test [-h] [--release {cix_sky1_Alpha0.4-rc1}]
+                     [--way {shell,env}] [--group {cix,cix,private,cix,sec}]
+                     [--platform {emu,fpga}] [--signature {rsa3072,sm2}]
+                     [--type {all,minimum}] [--all]
 
-        extendedChoice(name: 'way', choices: ['shell','env'],
-        description: 'Please select the way to do building test.')
+Do building test.
 
-        extendedChoice(name: 'repo', choices: ['cix','cix,private', 'cix,sec'],
-        description: 'Please select the repo for the stress test.')
+options:
+  -h, --help            show this help message and exit
+  --release {cix_sky1_Alpha0.4-rc1}, -r {cix_sky1_Alpha0.4-rc1}
+                        Give the target release to test like
+                        cix_sky1_Alpha0.4-rc1.
+  --way {shell,env}, -w {shell,env}
+                        Give the build way like shell or env or all for all
+                        possible way
+  --group {cix,cix,private,cix,sec}, -g {cix,cix,private,cix,sec}
+                        Give the code group like private, cix, sec or all for
+                        all groups
+  --platform {emu,fpga}, -p {emu,fpga}
+                        Give the platform to build like fpga, emu, sky1 or all
+                        for all possible platforms
+  --signature {rsa3072,sm2}, -s {rsa3072,sm2}
+                        Give the signature way like sm2 or rsa or all for all
+                        possible platforms
+  --type {all,minimum}, -t {all,minimum}
+                        Give the build type like minimum, all or full for all
+                        possible values.
+  --all, -a             Choose whether to test all building
+
+Process finished with exit code 0
+')
+
 
     }
     environment {
         SH_JBN = "${JOB_BASE_NAME}"
 
-        SH_FPLAT = "$params.FPGA_PLAT"
+        SH_PARA = "$params.Parameter"
 
         TOLIST = "cix.sw@cixtech.com anthony.tian@cixtech.com peter.zhang@cixtech.com fugang.duan@cixtech.com guoyin.chen@cixtech.com robin.wang@cixtech.com peter.chen@cixtech.com zhan.lou@cixtech.com cagent.zhang@cixtech.com"
         CCLIST = "adeline.wang@cixtech.com gang.liu@cixtech.com"
@@ -55,16 +77,13 @@ pipeline{
         FTOLIST = "anthony.tian@cixtech.com"
     }
     stages {
-        stage('PDC stress test') {
+        stage('Building test') {
             steps{
                 echo 'This is Firware Flashing step'
                 sh '''
-                pwd
-                echo $SH_FPLAT
-                echo $Number_of_repetitions
-                echo $SH_JBN
-                
-                #python3 -u fpga_pdc_stress/main.py
+                echo $Input_Parameter
+                #python3 -u linux_building_test/main.py
+                #/home/svc.swciuser/envs/devops/bin/python3 -u main.py $Input_Parameter
                 '''
             }
         }
