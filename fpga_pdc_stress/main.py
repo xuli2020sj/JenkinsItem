@@ -31,10 +31,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     count_cmd = "--count={}".format(args.count)
+    target_cmd = args.target.lower()
     test_cmd = "test_stability.py::{}".format(args.module)
 
     global_val.init()
     global_val.set_value('stopFlag', False)
-    global_val.set_value('targetPC', False)
+    global_val.set_value('targetPC', target_cmd)
 
     pytest.main(["-s", test_cmd, count_cmd, '--html=report.html', '--self-contained-html', '--capture=sys'])
