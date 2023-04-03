@@ -25,7 +25,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, quit)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--count', '-c', required=False, type=int, default=10)
+    parser.add_argument('--count', '-c', required=False, type=str)
     parser.add_argument('--target', '-t', required=False, type=str)
     parser.add_argument('--module', '-m', required=False, type=str, default="test_auto_flashing")
 

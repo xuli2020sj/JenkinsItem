@@ -73,9 +73,11 @@ def test_auto_flashing():
     if targetPC in sf100_list:
         pcSSH.sendline("qflash.py -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
+        logging.info(pcSSH.before)
     else:
         pcSSH.sendline("~/devops/lab_loader/commonFW/pdc_linux_console -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
+        logging.info(pcSSH.before)
 
     if index == 0 or index == 1 or index == 2:
         logging.info("Flashing failed")
