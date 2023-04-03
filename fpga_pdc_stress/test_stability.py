@@ -5,7 +5,7 @@ import sys
 from time import sleep
 
 import pexpect
-from pexpect.pxssh import pxssh
+from pexpect import pxssh
 
 import global_val
 import pytest
