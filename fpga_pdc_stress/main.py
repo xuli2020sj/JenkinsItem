@@ -26,7 +26,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--count', '-c', required=False, type=int, default=10)
-    parser.add_argument('--module', '-m', required=False, type=str, default="test_")
+    parser.add_argument('--target', '-t', required=False, type=str)
+    parser.add_argument('--module', '-m', required=False, type=str, default="test_auto_flashing")
 
     args = parser.parse_args()
     count_cmd = "--count={}".format(args.count)
@@ -34,5 +35,6 @@ if __name__ == '__main__':
 
     global_val.init()
     global_val.set_value('stopFlag', False)
+    global_val.set_value('targetPC', False)
 
     pytest.main(["-s", test_cmd, count_cmd, '--html=report.html', '--self-contained-html', '--capture=sys'])
