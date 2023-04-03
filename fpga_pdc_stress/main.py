@@ -32,7 +32,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     count_cmd = "--count={}".format(args.count)
     target_cmd = args.target.lower()
-    test_cmd = "test_stability.py::{}".format(args.module)
+    test_cmd = "fpga_pdc_stress/test_stability.py::{}".format(args.module)
 
     global_val.init()
     global_val.set_value('stopFlag', False)
