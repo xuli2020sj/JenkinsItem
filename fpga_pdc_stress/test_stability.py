@@ -78,10 +78,4 @@ def test_auto_flashing():
         pcSSH.sendline("~/devops/lab_loader/commonFW/pdc_linux_console -i " + ffwPath)
         index = pcSSH.expect(expect_list, timeout=240)
         logging.info(pcSSH.before)
-
-    if index == 0 or index == 1 or index == 2:
-        logging.info("Flashing failed")
-        sys.exit(1)
-    else:
-        logging.info("Flashing succeed")
-        sys.exit(0)
+    assert index == 3 or index == 4
