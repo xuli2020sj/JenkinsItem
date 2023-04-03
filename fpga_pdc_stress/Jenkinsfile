@@ -3,6 +3,17 @@ pipeline{
     options { retry(2) }
     post {
         success{
+
+            script{
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: "${SH_RPDIR}",
+                    reportFiles: 'report.html',
+                    reportName: "Test-Report"
+                ])
+            }
                 wrap([$class: 'BuildUser']) {
                    script {
                        BUILD_USER = "${env.BUILD_USER}"
@@ -44,7 +55,7 @@ pipeline{
     }
     environment {
         SH_JBN = "${JOB_BASE_NAME}"
-
+        SH_RPDIR = "/home/jackeydu/jenkins/workspace/${JOB_NAME}"
         SH_FPLAT = "$params.FPGA_PLAT"
 
         TOLIST = "cix.sw@cixtech.com anthony.tian@cixtech.com peter.zhang@cixtech.com fugang.duan@cixtech.com guoyin.chen@cixtech.com robin.wang@cixtech.com peter.chen@cixtech.com zhan.lou@cixtech.com cagent.zhang@cixtech.com"
