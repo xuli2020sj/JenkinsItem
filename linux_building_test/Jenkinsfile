@@ -9,6 +9,8 @@ pipeline{
                    }
 				}
             mail bcc: '',
+            emailext attachmentsPattern: 'test.html',
+			attachLog: true,
             body: "Dear ${BUILD_USER},\n\n\tBuild secced. Please check the result.",
             from: 'devops@cixcomputing.com', replyTo: '',
             subject: "Lab loader finished",
