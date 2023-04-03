@@ -9,9 +9,9 @@ pipeline{
                    }
 				}
             mail bcc: '',
-            emailext attachmentsPattern: 'test.html',
+            attachmentsPattern: 'test.html',
 			attachLog: true,
-            body: "Dear ${BUILD_USER},\n\n\tBuild secced. Please check the result.",
+            body: "Dear ${BUILD_USER},\n\n\tBuild succed. Please check the result.",
             from: 'devops@cixcomputing.com', replyTo: '',
             subject: "Lab loader finished",
             to: "${BUILD_USER_EMAIL}"
@@ -23,7 +23,10 @@ pipeline{
                        BUILD_USER_EMAIL = "${env.BUILD_USER_EMAIL}"
                    }
 				}
-            mail bcc: '', body: "Dear ${BUILD_USER},\n\n\tBuild failed. Please check the result.",
+            mail bcc: '',
+            attachmentsPattern: 'test.html',
+			attachLog: true,
+            body: "Dear ${BUILD_USER},\n\n\tBuild failed. Please check the result.",
             cc: 'li.xu@cixtech.com',
             from: 'devops@cixcomputing.com', replyTo: '',
             subject: "Lab loader finished",
