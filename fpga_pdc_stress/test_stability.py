@@ -2,11 +2,8 @@ import logging
 import re
 import subprocess
 import sys
-from time import sleep
-
 import pexpect
 from pexpect import pxssh
-
 import global_val
 import pytest
 
