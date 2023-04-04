@@ -76,7 +76,7 @@ pipeline{
                 echo $Number_of_repetitions
                 echo $SH_JBN
 
-                python3 -u fpga_pdc_stress/main.py -c $Number_of_repetitions -t $SH_FPLAT
+                ~/envs/devops/bin/python3 -u fpga_pdc_stress/main.py -c $Number_of_repetitions -t $SH_FPLAT
                 '''
             }
         }
