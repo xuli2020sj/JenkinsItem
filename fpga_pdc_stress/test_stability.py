@@ -73,7 +73,7 @@ def test_auto_flashing():
     logging.info("Flashing firmware from {}".format(ffwPath))
 
     index = 0
-    sf100_list = ["fpga01", "fpga02", "fpga03SUB02"]
+    sf100_list = ["fpga02", "fpga03SUB02"]
     logging.info("target PC is {}".format(targetPC))
     if targetPC in sf100_list:
         pcSSH.sendline("qflash.py -i " + ffwPath)
