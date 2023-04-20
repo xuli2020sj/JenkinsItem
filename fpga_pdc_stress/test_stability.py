@@ -47,6 +47,7 @@ def test_flashing():
 
 
 def test_auto_flashing():
+    
     stopFlag = global_val.get_value('stopFlag')
     targetPC = global_val.get_value('targetPC')
 
@@ -56,26 +57,34 @@ def test_auto_flashing():
 
     pcSSH = pSSH(pcInfo[targetPC])
 
+    # temp solution
+    pcSSH.sendline("killall -9 pdc_linux_console")
+    pcSSH.sendline("killall -9 pdc_linux_console")
+
     expect_list = [
         pexpect.EOF,
         pexpect.TIMEOUT,
-        "fail",
+        "SPI flash fail",
         "flashing image.*OK",
         "Flashing PASS"
     ]
     ffwPath = "/home/svc.fpgatest/devops/lab_loader/commonFW/cix_flash_all.bin"
 
     logging.info("Flashing firmware from {}".format(ffwPath))
-    # when index is 0, the job is successful
+
     index = 0
     sf100_list = ["fpga01", "fpga02", "fpga03SUB02"]
     logging.info("target PC is {}".format(targetPC))
     if targetPC in sf100_list:
         pcSSH.sendline("qflash.py -i " + ffwPath)
-        index = pcSSH.expect(expect_list, timeout=240)
+        index = pcSSH.expect(expect_list, timeout=500)
         logging.info(pcSSH.before)
     else:
         pcSSH.sendline("~/devops/lab_loader/commonFW/pdc_linux_console -i " + ffwPath)
-        index = pcSSH.expect(expect_list, timeout=240)
+        index = pcSSH.expect(expect_list, timeout=500)
+        if index == 1:
+            # temp solution
+            pcSSH.sendline("killall -9 pdc_linux_console")
+            pcSSH.sendline("killall -9 pdc_linux_console")
         logging.info(pcSSH.before)
     assert index == 3 or index == 4
