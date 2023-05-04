@@ -24,7 +24,7 @@ def pSSH(pinfo):
     chdPid = pxssh.pxssh(encoding='utf-8', timeout=240, codec_errors='replace')
     # only save output
     chdPid.logfile = sys.stdout
-    chdPid.login(pinfo['ip'], pinfo['name'], pinfo['passwd'], sync_multiplier=5)
+    chdPid.login(pinfo['ip'], pinfo['name'], pinfo['passwd'], sync_multiplier=5, login_timeout=30)
     return chdPid
 
 def test_flashing():
